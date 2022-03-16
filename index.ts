@@ -1,6 +1,6 @@
 import { enc, HmacSHA256 } from 'crypto-js';
 
-interface RailoneObj {
+interface InstObj {
     method: string;
     apiKey: string;
     apiSecret: string;
@@ -20,16 +20,16 @@ const getBodyString = (reqBody?: ReqBody): string => {
     return '';
 };
 
-const getSignature = ({method, apiKey, apiSecret, path, reqBody}: RailoneObj, now: number) => {
+const getSignature = ({method, apiKey, apiSecret, path, reqBody}: InstObj, now: number) => {
     const bodyStr = getBodyString(reqBody);
     const data = `${now}${method}${apiKey}${path}${bodyStr}`;
     const hash = HmacSHA256(data, apiSecret);
     return enc.Base64.stringify(hash);
 };
 
-const generateAuth = (railoneObj: RailoneObj): string => {
+const generateAuth = (instObj: InstObj): string => {
     const now = Date.now();
-    return `Inst:${railoneObj.apiKey}:${now}:${getSignature(railoneObj, now)}`;
+    return `Inst:${instObj.apiKey}:${now}:${getSignature(instObj, now)}`;
 };
 
 export default generateAuth;

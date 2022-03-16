@@ -29,7 +29,7 @@ const getSignature = ({method, apiKey, apiSecret, path, reqBody}: RailoneObj, no
 
 const generateAuth = (railoneObj: RailoneObj): string => {
     const now = Date.now();
-    return `Railone:${railoneObj.apiKey}:${now}:${getSignature(railoneObj, now)}`;
+    return `Inst:${railoneObj.apiKey}:${now}:${getSignature(railoneObj, now)}`;
 };
 
 export default generateAuth;

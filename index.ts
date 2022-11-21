@@ -12,12 +12,35 @@ interface ReqBody {
     [key: string]: any;
 }
 
+// const getBodyString = (reqBody?: ReqBody): string => {
+//     if (reqBody) {
+//         const keys = Object.keys(reqBody).sort();
+//         return keys.reduce((result, cur) => `${result}&${cur}=${reqBody[cur]}`, '').substring(1);
+//     }
+//     return '';
+// };
+
 const getBodyString = (reqBody?: ReqBody): string => {
-    if (reqBody) {
+      if (reqBody) {
         const keys = Object.keys(reqBody).sort();
-        return keys.reduce((result, cur) => `${result}&${cur}=${reqBody[cur]}`, '').substring(1);
-    }
-    return '';
+        let res = keys
+          .reduce((result, cur) => {
+            if (typeof reqBody[cur] === "object") {
+              const sortData = {}; // 
+              Object.keys(reqBody[cur])
+                .sort()
+                .map((key) => {
+                  sortData[key] = reqBody[cur][key];
+                });
+              return `${result}&${cur}=${JSON.stringify(sortData)}`;
+            } else {
+              return `${result}&${cur}=${reqBody[cur]}`;
+            }
+          }, "")
+          .substring(1);
+        return res;
+      }
+      return "";
 };
 
 const getSignature = ({method, apiKey, apiSecret, path, reqBody}: InstObj, now: number) => {
